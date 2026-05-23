@@ -1,0 +1,55 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lakehouse_project/**'
+      - '.github/workflows/dbt_ci.yml'
+
+jobs:
+  dbt-check:
+    name: Validate dbt Models
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('lakehouse_project/packages.yml') }}
+
+      - name: Install dbt
+        run: pip install dbt-athena-community==1.8.4
+
+      - name: Install dbt packages
+        working-directory: lakehouse_project
+        run: dbt deps
+
+      - name: dbt compile
+        working-directory: lakehouse_project
+        run: dbt compile --profiles-dir . --project-dir .
+        env:
+          DBT_S3_STAGING_DIR: s3://dummy-bucket/
+          DBT_ATHENA_WORKGROUP: primary
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy
+
+      - name: dbt parse
+        working-directory: lakehouse_project
+        run: dbt parse --profiles-dir . --project-dir .
+        env:
+          DBT_S3_STAGING_DIR: s3://dummy-bucket/
+          DBT_ATHENA_WORKGROUP: primary
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy

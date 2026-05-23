@@ -1,0 +1,24 @@
+# dbt
+lakehouse_project/target/
+lakehouse_project/dbt_packages/
+lakehouse_project/logs/
+lakehouse_project/.user.yml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+dbt-env/
+
+# Docker
+.dockerignore
+
+# AWS
+.aws/
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db

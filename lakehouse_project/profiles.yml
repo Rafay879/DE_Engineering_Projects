@@ -1,0 +1,12 @@
+lakehouse_project:
+  target: dev
+  outputs:
+    dev:
+      type: athena
+      region_name: us-east-1
+      s3_staging_dir: s3://aws-glue-assets-959666773387-us-east-1/athena-result/
+      schema: gold_db
+      database: AwsDataCatalog
+      work_group: primary
+      threads: 4
+      aws_profile_name: default

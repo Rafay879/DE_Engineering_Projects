@@ -1,0 +1,40 @@
+name: Deploy Glue Scripts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'glue_jobs/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-glue:
+    name: Upload Glue Scripts to S3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
+          aws-region: us-east-1
+
+      - name: Deploy Glue scripts to S3
+        run: |
+          aws s3 cp glue_jobs/ \
+            s3://aws-glue-assets-959666773387-us-east-1/scripts/ \
+            --recursive \
+            --exclude "*.pyc" \
+            --exclude "__pycache__/*"
+
+      - name: Verify deployment
+        run: |
+          echo "Deployed Glue scripts:"
+          aws s3 ls \
+            s3://aws-glue-assets-959666773387-us-east-1/scripts/
