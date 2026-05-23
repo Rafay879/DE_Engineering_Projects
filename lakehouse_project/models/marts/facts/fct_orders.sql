@@ -15,7 +15,7 @@ payments AS (
     SELECT
         order_id,
         SUM(payment_value)        AS total_payment_value,
-        COUNT(*)                  AS payment_count,
+        COUNT(*)                  AS payment_count,     --count all rows
         MAX(payment_type)         AS primary_payment_type
     FROM {{ ref('stg_order_payments') }}
     GROUP BY order_id
