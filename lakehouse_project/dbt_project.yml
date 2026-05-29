@@ -1,0 +1,39 @@
+name: 'lakehouse_project'
+version: '1.0.0'
+config-version: 2
+
+profile: 'lakehouse_project'
+
+model-paths: ["models"]
+snapshot-paths: ["snapshots"]
+test-paths: ["tests"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  lakehouse_project:
+    staging:
+      +materialized: view
+
+    marts:
+      dimensions:
+        +materialized: table
+        +table_type: iceberg
+        +s3_data_dir: s3://retail-lakehouse-gold/iceberg/
+        +format: parquet
+        +write_compression: snappy
+
+      facts:
+        +materialized: incremental
+        +table_type: iceberg
+        +s3_data_dir: s3://retail-lakehouse-gold/iceberg/
+        +format: parquet
+        +write_compression: snappy
+
+snapshots:
+  lakehouse_project:
+    +target_schema: gold_db
+    +table_type: iceberg
+    +s3_data_dir: s3://retail-lakehouse-gold/iceberg/
+    +format: parquet

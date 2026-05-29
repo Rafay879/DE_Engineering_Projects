@@ -1,0 +1,11 @@
+lakehouse_project:
+  target: prod
+  outputs:
+    prod:
+      type: athena
+      region_name: "{{ env_var('AWS_REGION') }}"
+      s3_staging_dir: "{{ env_var('DBT_S3_STAGING_DIR') }}"
+      schema: gold_db
+      database: AwsDataCatalog
+      work_group: "{{ env_var('DBT_ATHENA_WORKGROUP') }}"
+      threads: 4

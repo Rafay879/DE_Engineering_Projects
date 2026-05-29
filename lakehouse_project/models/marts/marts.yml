@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "One row per order with payment and item aggregates"
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - unique
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: order_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - delivered
+                - shipped
+                - canceled
+                - unavailable
+                - invoiced
+                - processing
+                - created
+                - approved
+      - name: total_payment_value
+        data_tests:
+          - not_null
+
+  - name: dim_customers
+    description: "One row per customer with order aggregates"
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+          - unique
+      - name: customer_city
+        data_tests:
+          - not_null
+
+  - name: dim_products
+    description: "One row per product with sales aggregates"
+    columns:
+      - name: product_id
+        data_tests:
+          - not_null
+          - unique

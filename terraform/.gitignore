@@ -1,0 +1,13 @@
+# Terraform provider binaries
+.terraform/
+
+# State files (contain sensitive ARNs and resource IDs)
+terraform.tfstate
+terraform.tfstate.backup
+
+# Variable override files
+*.tfvars
+*.tfvars.json
+
+# Crash logs
+crash.log
